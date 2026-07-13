@@ -25,7 +25,7 @@ export default function accountReducer(state = initialStateAccount, action) {
         balance: state.balance - state.loan,
       };
     default:
-      return status;
+      return state;
   }
 }
 

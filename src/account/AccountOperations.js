@@ -16,12 +16,13 @@ function AccountOperations() {
     if(!depositAmount) return
     dispatch(deposit(depositAmount, currency));
     setDepositAmount('')
+    setCurrency('')
   }
 
   function handleWithdrawal() {
     if(!withdrawalAmount) return
     dispatch(withdraw(withdrawalAmount));
-    setWithdrawalAmount('')
+    setWithdrawalAmount('USD')
   }
 
   function handleRequestLoan() {

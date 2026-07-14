@@ -1,12 +1,56 @@
-const initialStateAccount = {
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
   balance: 0,
   loan: 0,
   loanPurpose: "",
   isLoading: false,
 };
 
+const accountSlice = createSlice({
+  name: "account",
+  initialState,
+  reducers: {
+    deposit(state, action) {
+      state.balance = state.balance + action.payload;
+    },
+    withdraw(state, action) {
+      state.balance = state.balance - action.payload;
+    },
+    requestLoan: {
+      prepare(amount, purpose) {
+        return {
+          payload: { amount, purpose },
+        };
+      },
+
+      reducer(state, action) {
+        if (state.loan > 0) return;
+
+        state.loan = action.payload.amount;
+        state.loanPurpose = action.payload.purpose;
+        state.balance = state.balance + action.payload.amount;
+      },
+    },
+    payLoan(state, action) {
+      state.balance -= state.loan;
+      state.loanPurpose = "";
+      state.loan = 0;
+    },
+  },
+});
+
+console.log(accountSlice);
+
+export const { deposit, withdraw, requestLoan, payLoan } = accountSlice.actions;
+
+console.log(requestLoan(1000, "buy car"));
+
+export default accountSlice.reducer;
+
+/*
 // Reducer
-export default function accountReducer(state = initialStateAccount, action) {
+export default function accountReducer(state = initialState, action) {
   switch (action.type) {
     case "account/deposit":
       return { ...state, balance: state.balance + action.payload, isLoading: false };
@@ -23,7 +67,8 @@ export default function accountReducer(state = initialStateAccount, action) {
     case "account/payLoan":
       return {
         ...state,
-        loan: state.balance - state.loan,
+        loan: 0,
+        balance: state.balance - state.loan,
         loanPurpose: "",
       };
     case "account/convertingCurrency":
@@ -63,3 +108,4 @@ export function requestLoan(loan, purpose) {
 export function payLoan() {
   return { type: "account/payLoan" };
 }
+*/
